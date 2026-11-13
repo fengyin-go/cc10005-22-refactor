@@ -22,7 +22,11 @@ class ActionResult(BaseModel):
 
 
 class EntryPayload(BaseModel):
-    """登记或修改一条业务记录时提交的字段集合。"""
+    """登记或修改一条业务记录时提交的字段集合。
+
+    字段映射与结果校验不再走这个任意字典：它们各自使用 app/contracts.py 里
+    有边界的登记输入契约，内部编号、状态与异常标记不在可写范围。
+    """
 
     values: dict[str, Any] = Field(default_factory=dict)
     remark: str | None = None
@@ -125,18 +129,6 @@ class RetryEntry(BaseModel):
     field_6: str | None = None  # 可重试异常
     field_7: str | None = None  # 失败转存
 
-class ExtractorEntry(BaseModel):
-    """映射规则明细结构。"""
-
-    field_0: str | None = None  # 规则编号
-    field_1: str | None = None  # 源字段名称
-    field_2: str | None = None  # 目标字段名称
-    field_3: str | None = None  # 数据类型转换
-    field_4: str | None = None  # 默认填充值
-    field_5: str | None = None  # 清洗表达式
-    field_6: str | None = None  # 必填标识
-    field_7: str | None = None  # 唯一性校验
-
 class PipelineEntry(BaseModel):
     """流水线步骤明细结构。"""
 
@@ -148,18 +140,6 @@ class PipelineEntry(BaseModel):
     field_5: str | None = None  # 依赖步骤
     field_6: str | None = None  # 并行度
     field_7: str | None = None  # 失败策略
-
-class ValidatorEntry(BaseModel):
-    """校验规则明细结构。"""
-
-    field_0: str | None = None  # 规则编号
-    field_1: str | None = None  # 校验对象
-    field_2: str | None = None  # 校验类型
-    field_3: str | None = None  # 校验表达式
-    field_4: str | None = None  # 期望值范围
-    field_5: str | None = None  # 采样比例
-    field_6: str | None = None  # 异常阈值
-    field_7: str | None = None  # 阻断级别
 
 class StorageEntry(BaseModel):
     """存储配置明细结构。"""
